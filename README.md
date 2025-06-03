@@ -20,13 +20,18 @@ npm install jeopardy-json
 ```javascript
 const jeopardy = require('jeopardy-json');
 
-jeopardy.fetchGame('https://j-archive.com/showgame.php?game_id=1234')
+jeopardy.get('https://j-archive.com/showgame.php?game_id=1234')
   .then(data => {
     console.log(JSON.stringify(data, null, 2));
   })
   .catch(err => {
     console.error('Error fetching game data:', err);
   });
+  // or simply use the getString() promise
+  jeopardy.getString().then(str => {
+    console.log(str);
+  });
+
 ```
 
 This will output a JSON object containing the game's categories, clues, values, and answers.
