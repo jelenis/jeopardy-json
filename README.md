@@ -19,8 +19,9 @@ npm install jeopardy-json
 
 ```javascript
 const jeopardy = require('jeopardy-json');
+const gameID = 1; // gameID's are mostly random 
 
-jeopardy.get('https://j-archive.com/showgame.php?game_id=1234')
+jeopardy.getGame(gameID)
   .then(data => {
     console.log(JSON.stringify(data, null, 2));
   })
@@ -28,13 +29,25 @@ jeopardy.get('https://j-archive.com/showgame.php?game_id=1234')
     console.error('Error fetching game data:', err);
   });
   // or simply use the getString() promise
-  jeopardy.getString().then(str => {
+  jeopardy.getString(gameID).then(str => {
     console.log(str);
   });
 
 ```
 
 This will output a JSON object containing the game's categories, clues, values, and answers.
+
+```javascript
+const jeopardy = require('jeopardy-json');
+const gamesList = jeopardy.update();
+
+  jeopardy.update()
+  .then(gameList => {
+    console.log(gameList)
+  });
+
+```
+You can get an up-to-date list of shows and their corresponding gameIDs by calling update
 
 ## Output Format
 

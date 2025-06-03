@@ -75,7 +75,7 @@ async function getGamesBySeason(url) {
   return games;
 }
 
-async function update() {
+async function update(log = false) {
   let existing = [];
   if (fs.existsSync(OUTPUT_FILE)) {
     try {
@@ -111,7 +111,8 @@ async function update() {
   for (const link of seasonLinks) {
     const games = await getGamesBySeason(link);
     allGames.push(...games);
-    console.log(`Scraped ${link} (${games.length} games)`);
+    if (log)
+        console.log(`Scraped ${link} (${games.length} games)`);
   }
 
   const merged = [...existing, ...allGames];
@@ -122,7 +123,10 @@ async function update() {
 
 
   fs.writeFileSync(OUTPUT_FILE, JSON.stringify(deduped, null, 2));
-  console.log(`✅ Done! Saved ${deduped.length} games to ${OUTPUT_FILE}`);
+  if (log)
+    console.log(`✅ Done! Saved ${deduped.length} games to ${OUTPUT_FILE}`);
+
+  return deduped;
 }
 
 module.exports = {
