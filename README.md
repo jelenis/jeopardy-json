@@ -39,8 +39,6 @@ This will output a JSON object containing the game's categories, clues, values, 
 
 ```javascript
 const jeopardy = require('jeopardy-json');
-const gamesList = jeopardy.update();
-
   jeopardy.update()
   .then(gameList => {
     console.log(gameList)
