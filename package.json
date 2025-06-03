@@ -1,0 +1,40 @@
+{
+  "name": "jeopardy-json",
+  "version": "1.0.0",
+  "description": "A tool that scrapes and transforms Jeopardy! games from the J! Archive into structured JSON for trivia platforms and developers.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jelenis/jeopardy-json.git"
+  },
+  "keywords": [
+    "jeopardy",
+    "trivia",
+    "jarchive",
+    "json",
+    "scraper",
+    "parser",
+    "game-data",
+    "quiz",
+    "jeopardy-parser",
+    "jeopardy-json",
+    "data-extraction",
+    "clue",
+    "daily-double",
+    "final-jeopardy"
+  ],
+  "author": "John-Anthony Elenis",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jelenis/jeopardy-json/issues"
+  },
+  "homepage": "https://github.com/jelenis/jeopardy-json#readme",
+  "dependencies": {
+    "axios": "^1.9.0",
+    "cheerio": "^1.0.0",
+    "http": "^0.0.1-security"
+  }
+}
