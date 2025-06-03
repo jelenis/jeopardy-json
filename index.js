@@ -2,6 +2,7 @@
 const http = require('http'); // Loads the http module
 const axios = require('axios'); // for making HTTP requests, promises based
 const cheerio = require('cheerio'); // implments a subset of jQuery for easy HTML parsing
+const scraper = require('./scraper'); // for scraping the j-archive
 
 // get game
 function parseGame(html, game_id=1) {
@@ -180,4 +181,5 @@ function getString(game_id)    {
 module.exports = {
     getGame,
     getString,
+    ...scraper
 };

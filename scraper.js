@@ -14,7 +14,7 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 const fs = require('fs');
 
-const OUTPUT_FILE = 'games_list.json';
+const OUTPUT_FILE = 'games.json';
 const BASE_URL = 'http://www.j-archive.com';
 
 async function getSeasonLinks() {
@@ -125,4 +125,7 @@ async function update() {
   console.log(`✅ Done! Saved ${deduped.length} games to ${OUTPUT_FILE}`);
 }
 
-update();
+module.exports = {
+    update
+};
+
