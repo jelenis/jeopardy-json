@@ -46,7 +46,9 @@ function parseGame(html, game_id = 1) {
         "current_game": game_id,
         "next_game": null
     };
-
+    
+    // the values for each row in the jeopardy and double jeopardy rounds
+    // these are hardcoded because they are the same for every game
     const rowValues = {
         "jeopardy_round": [ '$200', '$400', '$600', '$800', '$1000' ],
         "double_jeopardy_round": [ '$400', '$800', '$1200', '$1600', '$2000' ]
@@ -121,14 +123,8 @@ function parseGame(html, game_id = 1) {
                 game[round][cat].push(jeodparyClue);
 
             });
-
         });
-
-
-
     }
-
-
 
     // the final jeopardy round is a bit different
     // so we need to parse it separately
@@ -141,9 +137,7 @@ function parseGame(html, game_id = 1) {
             response: $fj.find("em.correct_response").text() || "",
         }
     }
-
     return game;
-
 }
 
 /* * Get the game from the j-archive
@@ -177,7 +171,7 @@ function getGame(game_id = 1) {
 
     // make a erquest to the j-archive game page
     // and parse the html, then check for .wmv files
-    // TODO: handle the wmv
+    // TODO: handle the .wmv files
     return axios.get(game_url)
         .then(resp => parseGame(resp.data, game_id))
         .then(game => {
@@ -194,7 +188,6 @@ function getGame(game_id = 1) {
             return game;
         });
 }
-
 
 /**
  * Get the game from the j-archive and return it as a string
