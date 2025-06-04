@@ -3,7 +3,6 @@ const axios = require('axios'); // for making HTTP requests, promises based
 const cheerio = require('cheerio'); // implments a subset of jQuery for easy HTML parsing
 const scraper = require('./scraper'); // for scraping the j-archive
 
-
 /**
  * Parses the HTML of a Jeopardy! game page and extracts game data into a structured object.
  *
@@ -47,7 +46,12 @@ function parseGame(html, game_id = 1) {
         "current_game": game_id,
         "next_game": null
     };
-     
+
+    const rowValues = {
+        "jeopardy_round": [ '$200', '$400', '$600', '$800', '$1000' ],
+        "double_jeopardy_round": [ '$400', '$800', '$1200', '$1600', '$2000' ]
+    };
+    
     game.title = $("#game_title h1").text();
 
     // get the next game id from the title
@@ -59,12 +63,10 @@ function parseGame(html, game_id = 1) {
     // loop through the jeopardy clues and parse them
     // also record the values of each row
     for (round of ["jeopardy_round", "double_jeopardy_round"]) {
-        const rowValues = [];
         const categories = [];
         let $rows = $("#" + round + " table.round > tbody").children();
-       
 
-        $rows.each((_, v) => {
+        $rows.each((row, v) => {
             let $row = $(v);
 
             // add the categories to the game object
@@ -78,85 +80,53 @@ function parseGame(html, game_id = 1) {
             // we found all the categories, now we can parse the clues
             // and answers for this round
             let rowval = null;
-            $row.find("td.clue").each((i, v) => {
+            $row.find("td.clue").each((column, v) => {
                 let $data = $(v);
                 let clue = $data.find("td.clue_text").html() || "";
                 let response = $data.find("em.correct_response").text() || "";
                 let val = $data.find("td.clue_value").text();
                 let dd = false; // daily double
-                const cat = categories[i];
+                const cat = categories[column];
+                
+                const jeodparyClue = {
+                    clue: clue,
+                    response: null,
+                    value: val,
+                    dd: dd,
+                    column: column,
+                    row: row - 1 // row is 1-indexed in the HTML, so we need to subtract 1
+                }
 
+                // if there is a clue but no value, then it is a daily double
                 if (val == "" && clue != "") {
-                    // get dd value
-                    // val = $data.find("td.clue_value_daily_double").text().slice(3);
-                    val = "";
                     dd = true;
-                } else if (val) {
-                    rowval = val;
-                }
-
-
-                // push the answer to the game object
-                if (!game[round][cat]) {
-                    game[round][cat] = [];
-                }
-
+                } 
+                // hardcode the rowValues for the clues
+                jeodparyClue.val = rowValues[round][column];
+                
                 // if clue contains onmouseover, then it has a correct answer
                 // in the onmouseover attribute
                 let attr = $data.find("div").attr("onmouseover");
-                if (!attr) {
-                    // there is no correct answer push the clue
-                    game[round][cat].push({
-                        clue: clue,
-                        response: null,
-                        value: val,
-                        dd: dd
-                    });
-                    return;
+                if (attr) {
+                    // if the clue has a correct answer, then we need to parse it
+                    response = $data.find("em.correct_response").text() || ""
+                    jeodparyClue.response = response;
                 }
 
-
-                response = $data.find("em.correct_response").text() || ""
-
-                if (dd) {
-                    // console.log(val);
+                // initialize the clue list for this round and category
+                // if it doesn't already exist
+                if (!game[round][cat]) {
+                    game[round][cat] = [];
                 }
-                // console.log(game[round].categories[cat], cat);
-
-
-                game[round][cat].push({
-                    clue: clue,
-                    response: response,
-                    value: val,
-                    dd: dd,
-                    row: i
-                });
-
-
+                game[round][cat].push(jeodparyClue);
 
             });
-            if (rowval){
-                rowValues.push(rowval);
-            }
+
         });
 
-        // replace daily double values with the row value
-        // this is because the daily double value is the same for all clues
-         for (let cat in game[round]) {
-            for (let v of game[round][cat]) {
-                if (v.dd) {
-                  v.value = rowValues[v.row];
-                }
-            }
-         }
-   
+
+
     }
-
-   
-          // replace daily double values if the question exists since its not listed
-        // this is because the daily double value is the same for all clues
-        // in the same row, so we need to set it to the row value
-
 
 
 
@@ -183,11 +153,14 @@ function parseGame(html, game_id = 1) {
  * {
  *   title: "Game Title",
  *   jeopardy_round: {
- *     "Category 1": [
- *       { clue: "Clue text", response: "Correct answer", value: "Value of the clue", dd: true/false, row: 0 },
- *       ...
- *     ],
- *     ...
+ *     "Category 1": [{ 
+ *         clue: "Clue text", 
+ *         response: "Correct answer", 
+ *         value: "Value of the clue",
+ *         dd: true/false, 
+ *         row: 0,
+ *         col: 0
+ *      }, ...]
  *   },
  *   double_jeopardy_round: {
  *     ... (same structure as jeopardy_round)
