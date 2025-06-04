@@ -14,25 +14,25 @@ const scraper = require('./scraper'); // for scraping the j-archive
  * const html = '<html>...</html>';
  * const gameData = parseGame(html, 1234);
  *
- * // gameData = {
- * //   title: "Game Title",
- * //   jeopardy_round: {
- * //     "Category 1": [
- * //       { clue: "Clue text", response: "Correct answer", value: "Value of the clue", dd: true/false, row: 0 },
- * //       ...
- * //     ],
- * //     ...
- * //   },
- * //   double_jeopardy_round: {
- * //     "Category 1": [ ... ],
- * //     ...
- * //   },
- * //   final_jeopardy_round: {
- * //     "Category Name": { clue: "Final clue text", response: "Final correct answer" }
- * //   },
- * //   current_game: 1234,
- * //   next_game: 1235
- * // }
+ * gameData = {
+ *   title: "Game Title",
+ *   jeopardy_round: {
+ *     "Category 1": [
+ *       { clue: "Clue text", response: "Correct answer", value: "Value of the clue", dd: true/false, row: 0 },
+ *       ...
+ *     ],
+ *     ...
+ *   },
+ *   double_jeopardy_round: {
+ *     "Category 1": [ ... ],
+ *     ...
+ *   },
+ *   final_jeopardy_round: {
+ *     "Category Name": { clue: "Final clue text", response: "Final correct answer" }
+ *   },
+ *   current_game: 1234,
+ *   next_game: 1235
+ * }
  */
 function parseGame(html, game_id = 1) {
     $ = cheerio.load(html);
@@ -46,14 +46,14 @@ function parseGame(html, game_id = 1) {
         "current_game": game_id,
         "next_game": null
     };
-    
+
     // the values for each row in the jeopardy and double jeopardy rounds
     // these are hardcoded because they are the same for every game
     const rowValues = {
-        "jeopardy_round": [ '$200', '$400', '$600', '$800', '$1000' ],
-        "double_jeopardy_round": [ '$400', '$800', '$1200', '$1600', '$2000' ]
+        "jeopardy_round": ['$200', '$400', '$600', '$800', '$1000'],
+        "double_jeopardy_round": ['$400', '$800', '$1200', '$1600', '$2000']
     };
-    
+
     game.title = $("#game_title h1").text();
 
     // get the next game id from the title
@@ -89,7 +89,7 @@ function parseGame(html, game_id = 1) {
                 let val = $data.find("td.clue_value").text();
                 let dd = false; // daily double
                 const cat = categories[column];
-                
+
                 const jeodparyClue = {
                     clue: clue,
                     response: null,
@@ -102,10 +102,10 @@ function parseGame(html, game_id = 1) {
                 // if there is a clue but no value, then it is a daily double
                 if (val == "" && clue != "") {
                     dd = true;
-                } 
+                }
                 // hardcode the rowValues for the clues
                 jeodparyClue.val = rowValues[round][column];
-                
+
                 // if clue contains onmouseover, then it has a correct answer
                 // in the onmouseover attribute
                 let attr = $data.find("div").attr("onmouseover");
@@ -140,32 +140,32 @@ function parseGame(html, game_id = 1) {
     return game;
 }
 
-/* * Get the game from the j-archive
+/*
+ * Get the game from the j-archive
  * @param {Number} game_id - The game id to get (dictated by the archive)
  * @returns {Promise} - A promise that resolves to the game object
  * in the format:
  * {
  *   title: "Game Title",
  *   jeopardy_round: {
- *     "Category 1": [{ 
- *         clue: "Clue text", 
- *         response: "Correct answer", 
- *         value: "Value of the clue",
- *         dd: true/false, 
- *         row: 0,
- *         col: 0
- *      }, ...]
+ *     "Category 1": [
+ *       { clue: "Clue text", response: "Correct answer", value: "Value of the clue", dd: true/false, row: 0 },
+ *       ...
+ *     ],
+ *     ...
  *   },
  *   double_jeopardy_round: {
- *     ... (same structure as jeopardy_round)
+ *     "Category 1": [ ... ],
+ *     ...
  *   },
  *   final_jeopardy_round: {
  *     "Category Name": { clue: "Final clue text", response: "Final correct answer" }
  *   },
- *   current_game: "current game id",
- *   next_game: "next game id"
+ *   current_game: 1234,
+ *   next_game: 1235
  * }
  */
+
 function getGame(game_id = 1) {
     let game_url = 'http://www.j-archive.com/showgame.php?game_id=' + game_id;
 
@@ -175,15 +175,6 @@ function getGame(game_id = 1) {
     return axios.get(game_url)
         .then(resp => parseGame(resp.data, game_id))
         .then(game => {
-
-            // loop through the jeopardy round answers
-            // and convert the video clues to mp4
-            // for (let r of game.jeopardy_round.clue) {
-
-            //     if (r.clue && r.clue.indexOf(".wmv") >= 0) {
-            //         ans.clue = "found video clue";
-            //     }
-            // }
 
             return game;
         });
