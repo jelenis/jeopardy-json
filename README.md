@@ -1,25 +1,28 @@
-# Jeopardy JSON
+# 📘 Jeopardy JSON
 
-A simple tool that converts Jeopardy! game data from the J! Archive into structured and readable JSON format, ideal for trivia apps, data analysis, or educational projects.
+A lightweight Node.js package that fetches and converts Jeopardy! game data from the [J! Archive](https://j-archive.com) into structured, readable JSON — perfect for trivia apps, data analysis, machine learning models, or educational tools.
 
-## Features
+## ✨ Features
 
-- Fetches and parses Jeopardy! game data from the J! Archive.
-- Outputs clean JSON with categories, clues, values, and answers.
-- Ideal for trivia apps, data analysis, or educational projects.
-- Lightweight and easy to integrate into Node.js workflows.
+- 🔎 Fetches full Jeopardy! game data by `game_id`
+- 📦 Outputs clean, structured JSON with categories, clues, values, and answers
+- 🧠 Supports Jeopardy, Double Jeopardy, and Final Jeopardy rounds
+- ⚡ Provides a list of available games with air dates using `update()`
 
-## Installation
+## 📦 Installation
 
 ```bash
 npm install jeopardy-json
 ```
 
-## Usage
+## 🚀 Usage
 
-```javascript
+### Get a Game by `game_id`
+
+```js
 const jeopardy = require('jeopardy-json');
-const gameID = 1; // gameID's are mostly random 
+
+const gameID = 1;
 
 jeopardy.getGame(gameID)
   .then(data => {
@@ -28,52 +31,59 @@ jeopardy.getGame(gameID)
   .catch(err => {
     console.error('Error fetching game data:', err);
   });
-  // or simply use the getString() promise
-  jeopardy.getString(gameID).then(str => {
-    console.log(str);
-  });
-
 ```
 
-This will output a JSON object containing the game's categories, clues, values, and answers.
+### Or Get JSON as a String
 
-```javascript
-const jeopardy = require('jeopardy-json');
-  jeopardy.update()
+```js
+jeopardy.getString(gameID).then(str => {
+  console.log(str);
+});
+```
+
+### Get an Up-To-Date List of Shows and Game IDs
+
+```js
+jeopardy.update()
   .then(gameList => {
-    console.log(gameList)
+    console.log(gameList);
   });
-
 ```
-You can get an up-to-date list of shows and their corresponding gameIDs by calling update
 
-## Output Format
+## 📂 Output Format
+
+Each game is returned as a structured object like this:
 
 ```json
 {
-  "rounds": {
-    "Jeopardy!": [
+  "title": "Show #8618, aired 2022-04-13",
+  "jeopardy_round": {
+    "Category 1": [
       {
-        "category": "History",
-        "clues": [
-          {
-            "value": "$200",
-            "question": "He was the first president of the United States.",
-            "answer": "George Washington"
-          }
-        ]
+        "clue": "Clue text",
+        "response": "Correct answer",
+        "value": "$200",
+        "dd": false,
+        "row": 0
       }
-    ],
-    "Double Jeopardy!": [],
-    "Final Jeopardy!": {
-      "category": "World Capitals",
-      "clue": "This city has been the capital of its country since 1867.",
-      "answer": "Ottawa"
+    ]
+  },
+  "double_jeopardy_round": {
+    "Category 1": []
+  },
+  "final_jeopardy_round": {
+    "Category Name": {
+      "clue": "Final clue text",
+      "response": "Final correct answer"
     }
-  }
+  },
+  "current_game": 8618,
+  "next_game": 8619
 }
 ```
 
-## License
+> Clues are grouped by category. Each clue object includes the question (`clue`), correct answer (`response`), dollar value (`value`), and whether it was a Daily Double (`dd`).
+
+## 📝 License
 
 This project is licensed under the [MIT License](LICENSE).
