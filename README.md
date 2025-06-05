@@ -55,30 +55,27 @@ jeopardy.update()
 Each game is returned as a structured object like this:
 
 ```json
-{
-  "title": "Show #8618, aired 2022-04-13",
-  "jeopardy_round": {
+ {
+  title: "Game Title",
+  jeopardy_round: {
     "Category 1": [
-      {
-        "clue": "Clue text",
-        "response": "Correct answer",
-        "value": "$200",
-        "dd": false,
-        "row": 0
-      }
-    ]
+      { clue: "Clue text", response: "Correct answer", value: "Value of the clue", dd: true/false, row: 0, columm: 0 },
+      ...
+    ],
+    "Category 2": [ ... ],
+    ...
   },
-  "double_jeopardy_round": {
-    "Category 1": []
+  double_jeopardy_round: {
+    "Category 1": [
+      { clue: "Clue text", response: "Correct answer", value: "Value of the clue", dd: true/false, row: 0, columm: 0 },
+     ],
+    ...
   },
-  "final_jeopardy_round": {
-    "Category Name": {
-      "clue": "Final clue text",
-      "response": "Final correct answer"
-    }
+  final_jeopardy_round: {
+    "Category Name": { clue: "Final clue text", response: "Final correct answer" }
   },
-  "current_game": 8618,
-  "next_game": 8619
+  current_game: 1234,
+  next_game: 1235
 }
 ```
 
