@@ -104,7 +104,8 @@ function parseGame(html, game_id = 1) {
                     dd = true;
                 }
                 // hardcode the rowValues for the clues
-                jeodparyClue.val = rowValues[round][column];
+                jeodparyClue.value = rowValues[round][row - 1];
+              
 
                 // if clue contains onmouseover, then it has a correct answer
                 // in the onmouseover attribute
