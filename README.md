@@ -56,29 +56,52 @@ Each game is returned as a structured object like this:
 
 ```json
 {
-  "title": "Show #8618, aired 2022-04-13",
+  "title": "Show #4605 - Friday, September 17, 2004",
   "jeopardy_round": {
-    "Category 1": [
+    "ASIAN HISTORY": [
       {
-        "clue": "Clue text",
-        "response": "Correct answer",
+        "clue": "In a 2003 annual cost-of-living survey, it was ranked as the world's most expensive city",
+        "response": "Tokyo",
         "value": "$200",
         "dd": false,
-        "row": 0
+        "row": 0,
+        "column": 0
+      },
+      ...
+    ],
+    "WE LOVE BROADWAY": [
+      {
+        "clue": "Introduced in a 1933 film, this song has become a toe-tapping favorite on Broadway",
+        "response": "\"42nd Street\"",
+        "value": "$200",
+        "dd": false,
+        "row": 0,
+        "column": 1
       }
     ]
+    // Additional categories...
   },
   "double_jeopardy_round": {
-    "Category 1": []
+    "MONTY PYTHON": [
+      {
+        "clue": "The BBC TV show theme is actually 'Liberty Bell' by this American marching bandmaster",
+        "response": "Sousa",
+        "value": "$400",
+        "dd": false,
+        "row": 0,
+        "column": 0
+      }
+    ]
+    // Additional categories...
   },
   "final_jeopardy_round": {
-    "Category Name": {
-      "clue": "Final clue text",
-      "response": "Final correct answer"
+    "MARILYN MONROE MOVIES": {
+      "clue": "Marilyn plots her husband's murder at a honeymoon site in this, her only film with a 1-word title",
+      "response": "Niagara"
     }
   },
-  "current_game": 8618,
-  "next_game": 8619
+  "current_game": 10,
+  "next_game": 11
 }
 ```
 
