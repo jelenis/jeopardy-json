@@ -31,7 +31,7 @@ const scraper = require('./scraper'); // for scraping the j-archive
  *     "Category Name": { clue: "Final clue text", response: "Final correct answer" }
  *   },
  *   current_game: 1234,
- *   next_game: 1235
+ *   next_game: 1235ver
  * }
  */
 function parseGame(html, game_id = 1) {
