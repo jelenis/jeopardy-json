@@ -54,7 +54,7 @@ jeopardy.update()
 
 Each game is returned as a structured object like this:
 
-```json
+```jsonc
 {
   "title": "Show #4605 - Friday, September 17, 2004",
   "jeopardy_round": {
@@ -67,7 +67,7 @@ Each game is returned as a structured object like this:
         "row": 0,
         "column": 0
       },
-      ...
+     // ...
     ],
     "WE LOVE BROADWAY": [
       {
