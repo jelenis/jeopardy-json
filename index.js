@@ -3,6 +3,7 @@ const axios = require('axios'); // for making HTTP requests, promises based
 const cheerio = require('cheerio'); // implments a subset of jQuery for easy HTML parsing
 const scraper = require('./scraper'); // for scraping the j-archive
 
+
 /**
  * Parses the HTML of a Jeopardy! game page and extracts game data into a structured object.
  *
@@ -81,20 +82,25 @@ function parseGame(html, game_id = 1) {
 
             // we found all the categories, now we can parse the clues
             // and answers for this round
-            let rowval = null;
             $row.find("td.clue").each((column, v) => {
                 let $data = $(v);
-                let clue = $data.find("td.clue_text").html() || "";
+                let clue =  "";
                 let response = $data.find("em.correct_response").text() || "";
                 let val = $data.find("td.clue_value").text();
                 let dd = false; // daily double
                 const cat = categories[column];
 
+
+                let clueProps = parseClue($data.find("td.clue_text").html());
+                
+
                 const jeodparyClue = {
-                    clue: clue,
+                    clue: clueProps.text,
                     response: null,
                     value: val,
                     dd: dd,
+                    image: clueProps.image,
+                    video: clueProps.video,
                     column: column,
                     row: row - 1 // row is 1-indexed in the HTML, so we need to subtract 1
                 }
@@ -132,13 +138,56 @@ function parseGame(html, game_id = 1) {
     const $fj = $("#final_jeopardy_round");
     const attr = $fj.find(".category > div").attr("onmouseover");
     const cat = $fj.find(".category_name").text() || "";
+
     if (attr && $fj) {
+        clueProps = parseClue($fj.find("td.clue_text").html())
         game.final_jeopardy_round[cat] = {
-            clue: $fj.find("td.clue_text").html() || "",
+            clue: clueProps.text,
             response: $fj.find("em.correct_response").text() || "",
+            image: clueProps.image,
+            video: clueProps.video
         }
     }
     return game;
+}
+
+
+function parseClue(encodedText) {
+    const clueProps = {
+        text: "",
+        image: "",
+        video: ""
+    }
+    // helper function to leftover htmlentities
+    const decodeHtmlEntity = function(str) {
+        return str.replace(/&#(\d+);/g, function(match, dec) {
+            return String.fromCharCode(dec);
+        });
+    };
+    let decodedText = decodeHtmlEntity(encodedText);
+
+    // there is html embedded in the text (probably a video or image)
+    let startOfHidden = decodedText.indexOf("(<a");
+    if (startOfHidden != -1) {
+        
+        const videoMatch = decodedText.match(/href="([^"]+\.mp4)"/);
+        if (videoMatch) {
+            clueProps.video = videoMatch[1];
+        }
+        const imgMatch = decodedText.match(/href="([^"]+\.jpg)"/);
+        if (imgMatch) {
+            clueProps.img = imgMatch[1];
+        }
+
+        let endOfHidden = decodedText.indexOf(">)");
+        if (endOfHidden != -1) {
+            decodedText = decodedText.slice(endOfHidden+2);
+        }
+    }
+    $chr = cheerio.load(decodedText);
+    decodedText = $chr.text();
+    clueProps.text = decodedText;
+    return clueProps;
 }
 
 /*
@@ -166,7 +215,6 @@ function parseGame(html, game_id = 1) {
  *   next_game: 1235
  * }
  */
-
 function getGame(game_id = 1) {
     let game_url = 'http://www.j-archive.com/showgame.php?game_id=' + game_id;
 
@@ -180,6 +228,7 @@ function getGame(game_id = 1) {
             return game;
         });
 }
+
 
 /**
  * Get the game from the j-archive and return it as a string

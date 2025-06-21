@@ -64,6 +64,8 @@ Each game is returned as a structured object like this:
         "response": "Tokyo",
         "value": "$200",
         "dd": false,
+        "image": "",
+        "video": "",
         "row": 0,
         "column": 0
       },
@@ -75,6 +77,8 @@ Each game is returned as a structured object like this:
         "response": "\"42nd Street\"",
         "value": "$200",
         "dd": false,
+        "image": "",
+        "video": "",
         "row": 0,
         "column": 1
       }
@@ -88,6 +92,8 @@ Each game is returned as a structured object like this:
         "response": "Sousa",
         "value": "$400",
         "dd": false,
+        "image": "",
+        "video": "",
         "row": 0,
         "column": 0
       }
@@ -97,7 +103,9 @@ Each game is returned as a structured object like this:
   "final_jeopardy_round": {
     "MARILYN MONROE MOVIES": {
       "clue": "Marilyn plots her husband's murder at a honeymoon site in this, her only film with a 1-word title",
-      "response": "Niagara"
+      "response": "Niagara",
+      "image": "",
+      "video": ""
     }
   },
   "current_game": 10,
