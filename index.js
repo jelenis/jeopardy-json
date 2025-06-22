@@ -84,7 +84,7 @@ function parseGame(html, game_id = 1) {
             // and answers for this round
             $row.find("td.clue").each((column, v) => {
                 let $data = $(v);
-                let clue =  "";
+                let clue = "";
                 let response = $data.find("em.correct_response").text() || "";
                 let val = $data.find("td.clue_value").text();
                 let dd = false; // daily double
@@ -92,7 +92,7 @@ function parseGame(html, game_id = 1) {
 
 
                 let clueProps = parseClue($data.find("td.clue_text").html());
-                
+               
 
                 const jeodparyClue = {
                     clue: clueProps.text,
@@ -111,7 +111,7 @@ function parseGame(html, game_id = 1) {
                 }
                 // hardcode the rowValues for the clues
                 jeodparyClue.value = rowValues[round][row - 1];
-              
+
 
                 // if clue contains onmouseover, then it has a correct answer
                 // in the onmouseover attribute
@@ -151,16 +151,20 @@ function parseGame(html, game_id = 1) {
     return game;
 }
 
-
+/**
+ * Removes HTML entities and 
+ * organizes image and video URLs
+ */
 function parseClue(encodedText) {
     const clueProps = {
         text: "",
         image: "",
         video: ""
-    }
+    };
+
     // helper function to leftover htmlentities
-    const decodeHtmlEntity = function(str) {
-        return str.replace(/&#(\d+);/g, function(match, dec) {
+    const decodeHtmlEntity = function (str) {
+        return str.replace(/&#(\d+);/g, function (match, dec) {
             return String.fromCharCode(dec);
         });
     };
@@ -168,25 +172,28 @@ function parseClue(encodedText) {
 
     // there is html embedded in the text (probably a video or image)
     let startOfHidden = decodedText.indexOf("(<a");
+
     if (startOfHidden != -1) {
-        
+
         const videoMatch = decodedText.match(/href="([^"]+\.mp4)"/);
         if (videoMatch) {
             clueProps.video = videoMatch[1];
         }
         const imgMatch = decodedText.match(/href="([^"]+\.jpg)"/);
         if (imgMatch) {
-            clueProps.img = imgMatch[1];
+            clueProps.image = imgMatch[1];
         }
 
         let endOfHidden = decodedText.indexOf(">)");
         if (endOfHidden != -1) {
-            decodedText = decodedText.slice(endOfHidden+2);
+            decodedText = decodedText.slice(endOfHidden + 2);
         }
     }
     $chr = cheerio.load(decodedText);
     decodedText = $chr.text();
     clueProps.text = decodedText;
+    
+    
     return clueProps;
 }
 
