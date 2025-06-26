@@ -81,7 +81,7 @@ async function update(log = false) {
     try {
       existing = JSON.parse(fs.readFileSync(OUTPUT_FILE, 'utf8'));
     } catch {
-      console.warn('⚠️ Failed to parse existing JSON. Starting fresh.');
+      console.warn('Failed to parse existing JSON. Starting fresh.');
     }
   }
 
@@ -101,7 +101,7 @@ async function update(log = false) {
     val = Number(str.split("=")[1]);
     if (isNaN(val) || val < lastSeason)
       // skip seasons that are not numbers 
-      // or before the last scraped season
+      // or anything before the last scraped season
       return false;
     else
       return true;
@@ -124,12 +124,36 @@ async function update(log = false) {
 
   fs.writeFileSync(OUTPUT_FILE, JSON.stringify(deduped, null, 2));
   if (log)
-    console.log(`✅ Done! Saved ${deduped.length} games to ${OUTPUT_FILE}`);
+    console.log(`Done! Saved ${deduped.length} games to ${OUTPUT_FILE}`);
 
   return deduped;
 }
 
+
+/**
+ * Retrieves the list of games from the output file if it exists.
+ * Reads and parses the JSON data from the specified output file.
+ * Throws an error if the file exists but cannot be parsed as valid JSON.
+ *
+ * @async
+ * @function
+ * @returns {Promise<Object|undefined>} The parsed games list object if the file exists, otherwise undefined.
+ * @throws {Error} If the existing JSON file cannot be parsed.
+ */
+async function getGamesList() {
+  if (fs.existsSync(OUTPUT_FILE)) {
+    try {
+      const existingData = JSON.parse(fs.readFileSync(OUTPUT_FILE, 'utf8'));
+      return existingData;
+    } catch {
+      throw new Error('Failed to parse existing JSON.');
+    }
+  }
+}
+
+
 module.exports = {
-    update
+    update,
+    getGamesList
 };
 

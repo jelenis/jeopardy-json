@@ -254,8 +254,29 @@ function getString(game_id) {
     });
 }
 
+
+/**
+ * Retrieves a specific show from the list of games.
+ *
+ * @async
+ * @function
+ * @param {number} [showNum=1] - The number of the show to retrieve (1-based index).
+ * @returns {Promise<Object>} The game object corresponding to the specified show number.
+ * @throws {Error} If the show number is less than 1 or exceeds the number of available games.
+ */
+async function getShow(showNum=1) {
+
+  const games = await scraper.getGamesList();
+  if (showNum < 1 || showNum > games.length) 
+    throw new Error("ERROR: invalid show number");
+
+  return games[showNum - 1];
+
+}
+
 module.exports = {
     getGame,
     getString,
+    getShow,
     ...scraper
 };
