@@ -161,12 +161,21 @@ function parseClue(encodedText) {
         image: "",
         video: ""
     };
+    // missing clue
+    if (encodedText == null)
+        return clueProps;
 
-    // helper function to leftover htmlentities
+    // helper function to leftover html entities
     const decodeHtmlEntity = function (str) {
-        return str.replace(/&#(\d+);/g, function (match, dec) {
-            return String.fromCharCode(dec);
-        });
+        try {
+            return str.replace(/&#(\d+);/g, function (match, dec) {
+                return String.fromCharCode(dec);
+            });
+        } catch {
+            console.error("Could not decode HTML in", str);
+            return str;
+        }
+
     };
     let decodedText = decodeHtmlEntity(encodedText);
 
@@ -261,22 +270,22 @@ function getString(game_id) {
  * @async
  * @function
  * @param {number} [showNum=1] - The number of the show to retrieve (1-based index).
- * @returns {Promise<Object>} The game object corresponding to the specified show number.
+ * @returns {Promise} - A promise that resolves to the game object
  * @throws {Error} If the show number is less than 1 or exceeds the number of available games.
  */
-async function getShow(showNum=1) {
+async function getGameByShow(showNum=1) {
 
   const games = await scraper.getGamesList();
   if (showNum < 1 || showNum > games.length) 
     throw new Error("ERROR: invalid show number");
 
-  return games[showNum - 1];
+  return await getGame(games[showNum - 1]);
 
 }
 
 module.exports = {
     getGame,
     getString,
-    getShow,
+    getGameByShow,
     ...scraper
 };
