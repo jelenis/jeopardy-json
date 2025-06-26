@@ -274,12 +274,13 @@ function getString(game_id) {
  * @throws {Error} If the show number is less than 1 or exceeds the number of available games.
  */
 async function getGameByShow(showNum=1) {
+    
+    const games = await scraper.getGamesList();
+    if (showNum < 1 || showNum > games.length) 
+        throw new Error("ERROR: invalid show number");
 
-  const games = await scraper.getGamesList();
-  if (showNum < 1 || showNum > games.length) 
-    throw new Error("ERROR: invalid show number");
 
-  return await getGame(games[showNum - 1]);
+  return await getGame(games[showNum - 1].game_id);
 
 }
 
