@@ -41,6 +41,15 @@ jeopardy.getString(gameID).then(str => {
 });
 ```
 
+### Get a single game by show number from the currently stored games list (1-based index)
+
+```js
+jeopardy.getShow(gameID)
+  .then(show => {
+    console.log(show);
+  });
+```
+
 ## 📂 Output Format
 
 Each game is returned as a structured object like this:
@@ -125,16 +134,8 @@ jeopardy.getGamesList()
     console.log(games);
   });
 ```
-### Get a single show from the currently stored games list (1-based index)
 
-```js
-jeopardy.getShow(gameID)
-  .then(show => {
-    console.log(show);
-  });
-```
-
-### GetGamesList and GetShow Ouput 
+#### GetGamesList Ouput 
 this is index 122 in the games list
 ```js
   [...{
