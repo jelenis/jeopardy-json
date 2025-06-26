@@ -1,6 +1,6 @@
 {
   "name": "jeopardy-json",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "A tool that scrapes and transforms Jeopardy! games from the J! Archive into structured JSON for trivia platforms and developers.",
   "main": "index.js",
   "scripts": {
