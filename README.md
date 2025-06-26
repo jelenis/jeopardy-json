@@ -41,15 +41,6 @@ jeopardy.getString(gameID).then(str => {
 });
 ```
 
-### Get an Up-To-Date List of Shows and Game IDs
-
-```js
-jeopardy.update()
-  .then(gameList => {
-    console.log(gameList);
-  });
-```
-
 ## 📂 Output Format
 
 Each game is returned as a structured object like this:
@@ -112,8 +103,47 @@ Each game is returned as a structured object like this:
   "next_game": 11
 }
 ```
-
 > Clues are grouped by category. Each clue object includes the question (`clue`), correct answer (`response`), dollar value (`value`), and whether it was a Daily Double (`dd`).
+
+
+### Get an Up-To-Date List of Shows and Game IDs
+
+```js
+jeopardy.update()
+  .then(gameList => {
+    console.log(gameList);
+  });
+```
+
+
+
+### Get the most up to date array of Games sorted by show number
+
+```js
+jeopardy.getGamesList()
+  .then(games => {
+    console.log(games);
+  });
+```
+### Get a single show from the currently stored games list (1-based index)
+
+```js
+jeopardy.getShow(gameID)
+  .then(show => {
+    console.log(show);
+  });
+```
+
+### GetGamesList and GetShow Ouput 
+this is index 122 in the games list
+```js
+  [...{
+    game_id: 7847,
+    show_number: 123,
+    air_date: '1985-02-27',
+    season: 1
+  }...]
+```
 
 ## 📝 License
 
