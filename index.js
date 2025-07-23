@@ -32,7 +32,8 @@ const scraper = require('./scraper'); // for scraping the j-archive
  *     "Category Name": { clue: "Final clue text", response: "Final correct answer" }
  *   },
  *   current_game: 1234,
- *   next_game: 1235ver
+ *   next_game: 1235,
+ *   prev_game: 1233
  * }
  */
 function parseGame(html, game_id = 1) {
@@ -45,7 +46,8 @@ function parseGame(html, game_id = 1) {
         },
         "final_jeopardy_round": {},
         "current_game": game_id,
-        "next_game": null
+        "next_game": null,
+        "prev_game": null
     };
 
     // the values for each row in the jeopardy and double jeopardy rounds
@@ -61,6 +63,13 @@ function parseGame(html, game_id = 1) {
     next_game = $("#contestants_table td a:contains([next game >>])").attr("href");
     if (next_game) {
         game.next_game = Number(next_game.slice("showgame.php?game_id=".length));
+    }
+
+    // get the prev game id from the title
+    prev_game = $('#contestants_table td a:contains("\\[<< previous game\\]")').attr('href');
+    
+    if (prev_game) {
+        game.prev_game = Number(prev_game.slice("showgame.php?game_id=".length));
     }
 
     // loop through the jeopardy clues and parse them
@@ -228,7 +237,8 @@ function parseClue(encodedText) {
  *     "Category Name": { clue: "Final clue text", response: "Final correct answer" }
  *   },
  *   current_game: 1234,
- *   next_game: 1235
+ *   next_game: 1235,
+ *   prev_game: 1233
  * }
  */
 function getGame(game_id = 1) {
