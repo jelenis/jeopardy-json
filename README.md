@@ -1,13 +1,13 @@
-# 📘 Jeopardy JSON
+# Jeopardy JSON
 
 A lightweight Node.js package that fetches and converts Jeopardy! game data from the [J! Archive](https://j-archive.com) into structured, readable JSON — perfect for trivia apps, data analysis, machine learning models, or educational tools.
 
-## ✨ Features
+## Features
 
-- 🔎 Fetches full Jeopardy! game data by `game_id`
-- 📦 Outputs clean, structured JSON with categories, clues, values, and answers
-- 🧠 Supports Jeopardy, Double Jeopardy, and Final Jeopardy rounds
-- ⚡ Provides a list of available games with air dates using `update()`
+ Fetches full Jeopardy! game data by `game_id`
+   Outputs clean, structured JSON with categories, clues, values, and answers
+- Supports Jeopardy, Double Jeopardy, and Final Jeopardy rounds
+- Provides a list of available games with air dates using `update()`
 
 ## 📦 Installation
 
@@ -15,7 +15,7 @@ A lightweight Node.js package that fetches and converts Jeopardy! game data from
 npm install jeopardy-json
 ```
 
-## 🚀 Usage
+## Usage
 
 ### Get a Game by `game_id`
 
